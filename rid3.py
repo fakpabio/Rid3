@@ -3,6 +3,7 @@ from queue import Queue
 from Rid3.navigation import navigation
 from Rid3.gps import getGPS
 from object_detection import getSensorData
+import time
 
 def main():
     q = Queue()  # Define the shared queue here
@@ -16,9 +17,11 @@ def main():
     t2.start()
     t3.start()
 
-    import time
-    time.sleep(5)
-    print("Main program exiting...")
+    try:
+        while True:
+            time.sleep(1)  # Keep the main thread alive
+    except KeyboardInterrupt:
+        print("Exiting program...")
 
 if __name__ == "__main__":
     main()
