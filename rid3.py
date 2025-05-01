@@ -1,21 +1,21 @@
 from threading import Thread
 from queue import Queue
-from Rid3.navigation import navigation
-from Rid3.gps import getGPS
-from object_detection import getSensorData
+from navigation import navigation
+from gps import getGPS
+from detection import getSensorData
 import time
 
 def main():
-    q = Queue()  # Define the shared queue here
-    q2 = Queue()
+    gpsLo = [None,None]
+    
+    t2 = Thread(target=getGPS, args=(gpsLo,), daemon=True)
+    t3 = Thread(target=getSensorData, args=(), daemon=True)
+    t1 = Thread(target=navigation, args=(gpsLo,), daemon=True)
 
-    t1 = Thread(target=navigation, args=(q,), daemon=True)
-    t2 = Thread(target=getGPS, args=(q,), daemon=True)
-    t3 = Thread(target=getSensorData, args=(q2,), daemon=True)
-
-    t1.start()
     t2.start()
     t3.start()
+    time.sleep(1)
+    t1.start()
 
     try:
         while True:
